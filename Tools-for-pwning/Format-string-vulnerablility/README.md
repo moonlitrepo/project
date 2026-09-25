@@ -9,6 +9,9 @@ dan menghadapi kerentanan format string tidak perlu repot repot scripting dari n
 untuk target tidak terbatas, bisa leak hingga 1024 index lebih dengan konsekuensi delay output. disarankan untuk hasil instant set targ ke 32 atau 64, jika kurang baru tambahin.
 segede apasi buffernya wkwkwkwk.
 
+## compitable with :
+- x86-64 binary **not stripped**
+
 
 ## tutorial pake tools SeeIn.py
 
