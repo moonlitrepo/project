@@ -102,7 +102,7 @@ def filtering(leak,i):
         log_entry += f"\n{'':<2}{text.red('canary'):<23}{i:<15}{text.bold_yellow(leak_hex)}"
         payload_entry += f'%{i}$p.'
 
-    print(repr(leak_hex), len(leak_hex))
+    #print(repr(leak_hex), len(leak_hex)) hanya untuk debugging
     return log_entry,payload_entry
 
 def main():
