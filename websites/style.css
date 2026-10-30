@@ -1,0 +1,10 @@
+body {
+    font-family: arial;
+    background-color: burlywood;
+    color: aliceblue;
+    margin: 50px;
+}
+button {
+    background-color: blueviolet;
+    color: white;
+}
