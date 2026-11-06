@@ -36,6 +36,7 @@ function renderOrdered(){
         orderedMenu.innerHTML = `
             <p>Kamu belum memesan apapun</p>
         `
+        totalOrder.innerHTML = 'Rp.0'
         return;
     } 
     let html = `
@@ -54,7 +55,7 @@ function renderOrdered(){
             <li class="list-group-item d-flex justify-content-between align-items-center 
             list-group-item-success mb-1 rounded ">
                 ${pesanan}  (Rp.${harga})
-                <button class="btn btn-danger btn-sm">hapus</button>
+                <button onclick=deleteOrder(${i}) class="btn btn-danger btn-sm">hapus</button>
             </li>
         `
        
@@ -73,8 +74,68 @@ function addOrder(index){
 
 }
 
-function deleteOrder(){
+function deleteOrder(index){
+    ordered.splice(index,1);
+    renderOrdered();
 
 }
 renderMenu();
-// renderOrdered();
+renderOrdered();
+
+
+let halamanUtama = document.getElementById('halamanUtama');
+let halamanStruk = document.getElementById('halamanStruk');
+let detailStruk = document.getElementById('detailStruk');
+
+
+function beli(){
+    if (ordered.length === 0){
+        alert('tidak dapat melakukan pembelian, barang tidak valid.');
+        return;
+    }
+    let html = `
+        <table class="table table-borderless align-middle mb-0">
+        <tbody>    
+    `
+
+    let total = 0;
+
+
+    for (let i=0 ; i < ordered.length ; i++){
+        let index = ordered[i];
+        let order = arrayMenu[index];
+        let harga = arrayHarga[index];
+
+        total = total + harga
+        html += `
+            <tr>
+                <td class="fw-semibold">${order}</td>
+                <td>Rp.${harga}</td>
+            </tr>
+        `
+    }
+
+    html += `
+        </tbody>
+        <tfoot>
+            <tr class="table-light">
+                <th><strong>Total bayar</strong></th>
+                <th><strong>Rp.${total}</strong></th>
+            </tr>
+        </tfoot>
+        </table>
+    `
+    detailStruk.innerHTML = html
+    // console.log('berhasil beli sih')
+    halamanUtama.classList.add('d-none') 
+    halamanStruk.classList.remove('d-none')   
+}
+
+function bayar(){
+
+    alert('Terimakasih sudah berbelanja di website ini!')
+    ordered = [];
+    renderOrdered();
+    halamanStruk.classList.add('d-none');
+    halamanUtama.classList.remove('d-none'); 
+}
