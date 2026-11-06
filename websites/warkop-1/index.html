@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+</head>
+<body class="bg-light">
+    <div class="container mt-3">
+        <h1 class="text-center text-primary fw-bold">Hello world</h1>
+    </div>
+
+    <div class="container mt-5">
+        <div id="Halaman utama">
+            
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="card shadow mb-4">            
+                        <div class="card-header text-bg-primary">
+                            <h4 class="text-white">Daftar Menu</h4>
+                        </div>
+                        
+                        <div class="card-body text-secondary">
+                            <p>Menu Tersedia</p>
+                            <div id="areaMenu">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header text-bg-success">
+                            <h4 class="text-white">Keranjang</h4>
+                        </div>
+    
+                        <div class="card-body">
+                            <div id="orderedMenu">
+                                <small class="text-muted">
+                                    belum ada pesanan
+                                </small>
+                                <!-- summary ordered menu -->
+                            </div>
+                        </div>
+    
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>Total Harga:</h5>
+                                <h4 id="totalOrder" class="text-success fw-bold">Rp.0</h4>
+                            </div>
+                            <div>
+                                <button class="btn btn-success w-100 btn-lg" id="button">Beli Sekarang</button>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
